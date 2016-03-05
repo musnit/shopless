@@ -11,6 +11,26 @@
   },
   "endpoints": [
     {
+      "path": "{model}",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": "$${apiRequestTemplate}",
+      "responses": {
+        "400": {
+          "statusCode": "400"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {},
+          "application/json": ""
+        }
+      }
+    },
+    {
       "path": "{model}/{id}",
       "method": "GET",
       "authorizationType": "none",

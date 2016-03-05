@@ -30,8 +30,13 @@ module.exports.singleAll = function(event, cb) {
       dynamo.putItem(params, dynamoCallback);
       break;
     case 'GET':
-      params.Key = { name: event.pathId };
-      dynamo.getItem(params, dynamoCallback);
+      if(typeof event.pathId === undefined || event.pathId === ""){
+        dynamo.scan(params, dynamoCallback);
+      }
+      else {
+        params.Key = { name: event.pathId };
+        dynamo.getItem(params, dynamoCallback);
+      }
       break;
     case 'PATCH':
       params.Key = { name: event.pathId };
@@ -45,15 +50,6 @@ module.exports.singleAll = function(event, cb) {
     case 'DELETE':
       params.Key = { name: event.pathId };
       dynamo.deleteItem(params, dynamoCallback);
-      break;
-    case 'list':
-      dynamo.scan(params, dynamoCallback);
-      break;
-    case 'echo':
-      cb(null, params);
-      break;
-    case 'ping':
-      cb(null, 'pong');
       break;
     default:
       return cb(new Error('Unrecognized operation "' + operation + '"'));
