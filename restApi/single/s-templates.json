@@ -1,7 +1,8 @@
 {
   "apiRequestTemplate": {
     "application/json": {
-      "pathId": "$input.params('id')"
+      "pathId": "$input.params('id')",
+      "modelName": "$input.params('model')"
     }
   }
 }
