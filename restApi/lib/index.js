@@ -20,32 +20,37 @@ module.exports.singleAll = function(event, cb) {
     cb(error, data);
   };
 
-  var payload = {
+  var params = {
     TableName: event.modelName,
   };
 
   switch (operation) {
     case 'POST':
-      payload.Item = event.body;
-      dynamo.putItem(payload, dynamoCallback);
+      params.Item = event.body;
+      dynamo.putItem(params, dynamoCallback);
       break;
     case 'GET':
-      payload.Key = event.pathId;
-      dynamo.getItem(payload, dynamoCallback);
+      params.Key = { name: event.pathId };
+      dynamo.getItem(params, dynamoCallback);
       break;
     case 'PATCH':
-      payload.Key = event.pathId;
-      dynamo.updateItem(payload, dynamoCallback);
+      params.Key = { name: event.pathId };
+      var mappedBody = {};
+      Object.keys(event.body).map(function(value, index) {
+       mappedBody[value] = { Value: event.body[value] };
+      });
+      params.AttributeUpdates = mappedBody;
+      dynamo.updateItem(params, dynamoCallback);
       break;
     case 'DELETE':
-      payload.Key = event.pathId;
-      dynamo.deleteItem(payload, dynamoCallback);
+      params.Key = { name: event.pathId };
+      dynamo.deleteItem(params, dynamoCallback);
       break;
     case 'list':
-      dynamo.scan(payload, dynamoCallback);
+      dynamo.scan(params, dynamoCallback);
       break;
     case 'echo':
-      cb(null, payload);
+      cb(null, params);
       break;
     case 'ping':
       cb(null, 'pong');
