@@ -9,14 +9,20 @@ Make sure you have the [Serverless Framework](http://www.serverless.com) install
 npm install serverless -g
 ```
 
-Install the project using Serverless:
-```
-serverless project install serverless-starter
-```
-Go into each project component and install its dependencies via npm:
+Go into the restApi component and install its dependencies via npm:
 ```
 npm install
 ```
+
+Add your aws keys to a file admin.env in the repo folder:
+SERVERLESS_ADMIN_AWS_ACCESS_KEY_ID=asdfg
+SERVERLESS_ADMIN_AWS_SECRET_ACCESS_KEY=asdf
+
+Add your serverless env config to a .env file in the repo folder:
+SERVERLESS_STAGE=dev
+SERVERLESS_DATA_MODEL_STAGE=dev
+SERVERLESS_PROJECT_NAME=serverless-starter
+
 Deploy your functions and endpoints:
 ```
 serverless dash deploy
@@ -26,8 +32,7 @@ serverless dash deploy
 
 This project contains the following:
 
-* **Multi:** Multiple functions each containing a single endpoint
-* **Single:** A single function that uses multiple endpoints.
+* **Single:** A single function that does all we need.
 * **Optimizer Plugin:**  Each function is automatically optimized via the [serverless-optimizer-plugin](https://www.github.com/serverless/serverless-optimizer-plugin)
 * **Templates:** Templates are used to reduce configuraton syntax
 * **REST API Parameters:** The Multi/Show function endpoint gives an example of how to accept a path parameter
