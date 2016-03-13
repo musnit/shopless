@@ -44,7 +44,18 @@ module.exports.singleAll = function(event, cb) {
        mappedBody[value] = { Value: event.body[value] };
       });
       params.AttributeUpdates = mappedBody;
-      dynamo.updateItem(params, dynamoCallback);
+      dynamo.updateItem(params, function(error, data){
+        if (error) {
+          cb(error, undefined);
+        }
+        else {
+          dynamo.getItem({
+            TableName: event.modelName,
+            Key: { name: event.pathId }
+          }, dynamoCallback);
+        }
+      }.bind(this));
+
       break;
     case 'DELETE':
       params.Key = { name: event.pathId };
