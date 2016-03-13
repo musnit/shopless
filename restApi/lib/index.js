@@ -10,13 +10,23 @@ module.exports.singleAll = function(event, cb) {
   };
 
   var params = {
-    TableName: event.modelName,
+    TableName: event.modelName
   };
 
   switch (operation) {
     case 'POST':
       params.Item = event.body;
-      dynamo.putItem(params, dynamoCallback);
+      dynamo.putItem(params, function(error, data){
+        if (error) {
+          cb(error, undefined);
+        }
+        else {
+          dynamo.getItem({
+            TableName: event.modelName,
+            Key: { name: event.body.name }
+          }, dynamoCallback);
+        }
+      }.bind(this));
       break;
     case 'GET':
       if(typeof event.pathId === undefined || event.pathId === ""){
