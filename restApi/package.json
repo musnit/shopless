@@ -13,6 +13,7 @@
   "devDependencies": {},
   "dependencies": {
     "aws-sdk": "^2.2.40",
+    "serverless-cors-plugin": "^0.3.2",
     "serverless-helpers-js": "~0.0.3"
   }
 }

@@ -28,6 +28,8 @@ Deploy your functions and endpoints:
 serverless dash deploy
 ```
 
+Make sure all appropriate OPTIONS endpoints and CORS headers are deployed too.
+
 ##Includes
 
 This project contains the following:
