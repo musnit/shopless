@@ -10,7 +10,7 @@ var dynamodb = new AWS.DynamoDB();
 vogels.dynamoDriver(dynamodb);
 
 var extractFilters = function(queryParamsString) {
-  var queryParamsArray = queryParamsString.slice(1, queryParamsString.length).split(',');
+  var queryParamsArray = queryParamsString.slice(1, queryParamsString.length - 1).split(',');
   queryParamsArray = queryParamsArray.map(function(queryParam){
     return queryParam.trim().split('=');
   });
@@ -57,13 +57,20 @@ module.exports.singleAll = function(event, cb) {
       break;
     case 'GET':
       var Model = vogels.define(event.modelName, {
-        hashKey : 'email',
-        // add the timestamp attributes (updatedAt, createdAt)
-        timestamps : true,
-        tableName: event.modelName
+        hashKey : 'id',
+        tableName: event.modelName,
+        schema : {
+          id : vogels.types.uuid()
+        }
       });
       if(typeof event.pathId === undefined || event.pathId === ""){
-        Model.scan().exec(dynamoCallback);
+        var query = Model.scan();
+        for(var key in filterParams) {
+          if(filterParams.hasOwnProperty(key)) {
+            query.where(key).equals(filterParams[key]);
+          }
+        }
+        query.exec(dynamoCallback);
       }
       else {
         params.Key = { name: event.pathId };
