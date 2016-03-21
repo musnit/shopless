@@ -2,7 +2,8 @@
   "apiRequestTemplate": {
     "application/json": {
       "pathId": "$input.params('id')",
-      "modelName": "$input.params('model')"
+      "modelName": "$input.params('model')",
+      "queryParams": "$input.params().querystring"
     }
   }
 }

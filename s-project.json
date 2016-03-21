@@ -5,7 +5,11 @@
   "location": "https://github.com/...",
   "author": "",
   "description": "A starter boilerplate for new Serverless Projects using primarily nodejs",
-  "custom": {},
+  "custom": {
+    "optimize": {
+      "exclude": ["aws-sdk"]
+    }
+  },
   "plugins": [
     "serverless-optimizer-plugin",
     "serverless-cors-plugin"
