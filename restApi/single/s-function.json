@@ -9,13 +9,12 @@
     "envVars": [],
     "cors": {
       "allowOrigin": "*",
-      "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"],
-      "allowMethods": ["POST", "GET", "OPTIONS", "PATCH", "POST"]
+      "allowHeaders": ["Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"]
     }
   },
   "endpoints": [
     {
-      "path": "{model}",
+      "path": "data/{model}",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -35,7 +34,7 @@
       }
     },
     {
-      "path": "{model}/{id}",
+      "path": "data/{model}/{id}",
       "method": "GET",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -55,7 +54,7 @@
       }
     },
     {
-      "path": "{model}/{id}",
+      "path": "data/{model}/{id}",
       "method": "PATCH",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -75,7 +74,7 @@
       }
     },
     {
-      "path": "{model}",
+      "path": "data/{model}",
       "method": "POST",
       "authorizationType": "none",
       "apiKeyRequired": false,
@@ -95,7 +94,7 @@
       }
     },
     {
-      "path": "{model}/{id}",
+      "path": "data/{model}/{id}",
       "method": "DELETE",
       "authorizationType": "none",
       "apiKeyRequired": false,
