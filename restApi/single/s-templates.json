@@ -3,6 +3,7 @@
     "application/json": {
       "pathId": "$input.params('id')",
       "modelName": "$input.params('model')",
+      "include": "$input.params('include')",
       "queryParams": "$input.params().querystring"
     }
   }

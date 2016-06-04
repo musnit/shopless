@@ -29,11 +29,56 @@ var extractFilters = function(queryParamsString) {
 module.exports.singleAll = function(event, cb) {
 
   var filterParams = extractFilters(event.queryParams);
+
+  //todo: add support for multiple includes and nested includes
+  var include = event.include && event.include.trim();
+
+  var dataContextHolder;
+
   var hasFilters = Object.keys(filterParams).length !== 0;
 
   var operation = event.httpMethod;
   var dynamoCallback = function(error, data){
-    cb(error, data);
+    cb(error? JSON.stringify(error) : null, data);
+  };
+
+  var tableCallback = function(error, data){
+    dataContextHolder = data;
+    if (include){
+      var Model = vogels.define(include, {
+        hashKey : 'id',
+        tableName: include,
+        schema : {
+          id : vogels.types.uuid()
+        }
+      });
+
+      if (data["Items"]){
+        var includeIds = data["Items"].map(function(item){
+          return item.attrs[include];
+        });
+
+        var query = Model.scan();
+        query.where('name').in(includeIds);
+        query.exec(includeCallback);
+      }
+      else {
+        var params = {
+          TableName: include,
+          Key: { name: data["Item"][include] }
+        };
+        dynamo.getItem(params, includeCallback);
+      }
+    }
+    else {
+      dynamoCallback(error, data);
+    }
+  };
+
+  var includeCallback = function(error, data){
+    dataContextHolder.include = {};
+    dataContextHolder.include[include] = data;
+    dynamoCallback(error, dataContextHolder);
   };
 
   var params = {
@@ -70,11 +115,11 @@ module.exports.singleAll = function(event, cb) {
             query.where(key).equals(filterParams[key]);
           }
         }
-        query.exec(dynamoCallback);
+        query.exec(tableCallback);
       }
       else {
         params.Key = { name: event.pathId };
-        dynamo.getItem(params, dynamoCallback);
+        dynamo.getItem(params, tableCallback);
       }
       break;
     case 'PATCH':
