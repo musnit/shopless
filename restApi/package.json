@@ -14,8 +14,9 @@
   "dependencies": {
     "aws-sdk": "^2.2.45",
     "joi": "^5.1.0",
+    "node-uuid": "^1.4.7",
     "serverless-cors-plugin": "^0.3.2",
     "serverless-helpers-js": "~0.0.3",
-    "vogels": "^2.2.0"
+    "vogels": "git+https://github.com/musnit/vogels.git"
   }
 }
