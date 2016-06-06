@@ -25,6 +25,13 @@ var extractFilters = function(queryParamsString) {
   return filterParams;
 }
 
+function uniq(a) {
+    var seen = {};
+    return a.filter(function(item) {
+        return (seen.hasOwnProperty(item) || item === undefined) ? false : (seen[item] = true);
+    });
+}
+
 // Single - All
 module.exports.singleAll = function(event, cb) {
 
@@ -65,7 +72,8 @@ module.exports.singleAll = function(event, cb) {
       var includeIds = dataContextHolder.Items.map(function(item){
         return item.attrs[include];
       });
-      Model.getItems(includeIds, includeCallback);
+
+      Model.getItems(uniq(includeIds), includeCallback);
     }
     else {
       dynamoCallback(error, dataContextHolder);
@@ -84,6 +92,7 @@ module.exports.singleAll = function(event, cb) {
         Items: [data]
       };
     }
+
     dataContextHolder.include = {};
     dataContextHolder.include[include] = includeContextHolder;
     dynamoCallback(error, dataContextHolder);
