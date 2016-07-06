@@ -9,6 +9,8 @@ AWS.config.update({region : 'us-east-1'});
 var dynamodb = new AWS.DynamoDB();
 vogels.dynamoDriver(dynamodb);
 
+var SECRET_KEY = 'qqq';
+
 var extractFilters = function(queryParamsString) {
   var queryParamsArray = queryParamsString.slice(1, queryParamsString.length - 1).split(',');
   queryParamsArray = queryParamsArray.map(function(queryParam){
@@ -108,6 +110,10 @@ module.exports.singleAll = function(event, cb) {
 
   switch (operation) {
     case 'POST':
+      if (event.body.secretKey != SECRET_KEY){
+        return dynamoCallback('Not Authorized');
+      }
+      delete(event.body.secretKey);
       Model.create(event.body, dynamoCallback);
       break;
     case 'GET':
@@ -125,10 +131,17 @@ module.exports.singleAll = function(event, cb) {
       }
       break;
     case 'PATCH':
+      if (event.body.secretKey != SECRET_KEY){
+        return dynamoCallback('Not Authorized');
+      }
+      delete(event.body.secretKey);
       event.body.id = event.pathId;
       Model.update(event.body, dynamoCallback);
       break;
     case 'DELETE':
+      if (event.secretKey != SECRET_KEY){
+        return dynamoCallback('Not Authorized');
+      }
       Model.destroy(event.pathId, dynamoCallback);
       break;
     default:

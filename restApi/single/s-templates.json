@@ -4,7 +4,8 @@
       "pathId": "$input.params('id')",
       "modelName": "$input.params('model')",
       "include": "$input.params('include')",
-      "queryParams": "$input.params().querystring"
+      "queryParams": "$input.params().querystring",
+      "secretKey": "$input.params('secretKey')"
     }
   }
 }
