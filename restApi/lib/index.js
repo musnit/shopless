@@ -27,6 +27,12 @@ var extractFilters = function(queryParamsString) {
   return filterParams;
 }
 
+var searchFilterItems = function(query, stream){
+    return stream.filter(function(item) {
+      return item.attrs.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
+    });
+};
+
 function uniq(a) {
     var seen = {};
     return a.filter(function(item) {
@@ -52,15 +58,30 @@ module.exports.singleAll = function(event, cb) {
   };
 
   var tableCallback = function(error, data){
-    if(data["Items"]) {
-      dataContextHolder = {
-        Items: data["Items"]
-      };
+    if(filterParams['search']) {
+          var filteredItems = searchFilterItems(filterParams['search'], data["Items"]);
+          if(data["Items"]) {
+            dataContextHolder = {
+              Items: filteredItems,
+            };
+          }
+          else {
+            dataContextHolder = {
+              Items: [data]
+            };
+          }
     }
     else {
-      dataContextHolder = {
-        Items: [data]
-      };
+          if(data["Items"]) {
+            dataContextHolder = {
+              Items: data["Items"]
+            };
+          }
+          else {
+            dataContextHolder = {
+              Items: [data]
+            };
+          }
     }
     if (include){
       var Model = vogels.define(include, {
@@ -120,7 +141,7 @@ module.exports.singleAll = function(event, cb) {
       if(typeof event.pathId === undefined || event.pathId === ""){
         var query = Model.scan();
         for(var key in filterParams) {
-          if(filterParams.hasOwnProperty(key)) {
+          if(key != 'search' && filterParams.hasOwnProperty(key)) {
             query.where(key).equals(filterParams[key]);
           }
         }
